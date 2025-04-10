@@ -7,7 +7,9 @@ const Navbar = () => {
   const currentPath = location.pathname;
 
   const isActive = (path) =>
-    currentPath === path ? 'text-green-600 font-bold' : 'text-gray-700';
+    currentPath === path
+      ? 'text-green-500 font-bold underline underline-offset-4'
+      : 'text-gray-200 hover:text-green-300 transition duration-300';
 
   const handleLogout = () => {
     localStorage.clear();
@@ -15,12 +17,15 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white shadow-md px-6 py-4 flex justify-between items-center">
-      <Link to="/home" className="text-2xl font-bold text-green-600">
+    <nav className="backdrop-blur-lg bg-black/60 shadow-md px-8 py-5 flex justify-between items-center fixed top-0 left-0 right-0 z-50">
+      <Link
+        to="/home"
+        className="text-3xl font-extrabold text-green-400 hover:scale-105 transform transition duration-300"
+      >
         🍽️ Nutrition Tracker
       </Link>
 
-      <div className="flex items-center space-x-6 text-md">
+      <div className="flex items-center gap-8 text-lg font-medium">
         <Link to="/home" className={isActive('/home')}>
           Home
         </Link>
@@ -39,7 +44,7 @@ const Navbar = () => {
 
         <button
           onClick={handleLogout}
-          className="bg-red-500 text-white px-3 py-1 rounded-xl hover:bg-red-600 transition text-sm"
+          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl transition duration-300 text-sm shadow-md"
         >
           Logout
         </button>

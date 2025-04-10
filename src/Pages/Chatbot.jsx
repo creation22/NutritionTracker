@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 
 const mockReplies = {
   protein: 'Protein helps in muscle building and repair. Great for post-workout meals!',
@@ -26,47 +27,51 @@ const Chatbot = () => {
       sender: 'bot',
       text: keyword
         ? mockReplies[keyword]
-        : "I'm still learning! Please try asking about calories, protein, fat, or carbs.",
+        : "I'm still learning! Try asking about calories, protein, fat, or carbs.",
     };
 
     setTimeout(() => {
       setMessages((prev) => [...prev, botReply]);
-    }, 800);
+    }, 600);
 
     setInput('');
   };
 
   return (
-    <div className="min-h-screen px-6 py-10 bg-gray-50 text-gray-800 flex flex-col items-center">
-      <h2 className="text-3xl font-bold mb-6 text-green-600 text-center">
+    <div className="min-h-screen pt-32 px-4 md:px-8 bg-gradient-to-br from-green-50 to-white dark:from-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-100 transition-all duration-300">
+      <h2 className="text-4xl font-bold text-center text-green-600 dark:text-green-400 mb-6">
         AI Nutrition Assistant 🤖
       </h2>
 
-      <div className="bg-white w-full max-w-xl rounded-xl shadow-lg p-4 flex flex-col h-[500px] overflow-y-auto mb-4">
+      <div className="max-w-3xl mx-auto w-full bg-white dark:bg-gray-900 shadow-2xl rounded-3xl p-6 flex flex-col h-[500px] overflow-y-auto space-y-2">
         {messages.map((msg, index) => (
-          <div
+          <motion.div
             key={index}
-            className={`my-2 max-w-[80%] p-3 rounded-xl ${
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className={`max-w-[80%] px-4 py-3 rounded-xl shadow-md ${
               msg.sender === 'user'
-                ? 'bg-green-100 ml-auto text-right'
-                : 'bg-gray-200 mr-auto text-left'
+                ? 'bg-green-100 dark:bg-green-700 ml-auto text-right'
+                : 'bg-gray-200 dark:bg-gray-700 mr-auto text-left'
             }`}
           >
             {msg.text}
-          </div>
+          </motion.div>
         ))}
       </div>
 
-      <div className="flex w-full max-w-xl">
+      <div className="flex mt-6 max-w-3xl mx-auto w-full">
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSend()}
           placeholder="Ask a nutrition question..."
-          className="flex-1 border border-gray-300 rounded-l-xl px-4 py-2"
+          className="flex-1 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-l-xl px-4 py-3 focus:outline-none"
         />
         <button
           onClick={handleSend}
-          className="bg-green-500 text-white px-6 py-2 rounded-r-xl hover:bg-green-600"
+          className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-r-xl transition"
         >
           Send
         </button>
