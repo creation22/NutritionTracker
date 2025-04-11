@@ -1,181 +1,140 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 
-const mockFoodData = {
-  apple: 52,
-  banana: 96,
-  rice: 130,
-  egg: 155,
-  milk: 42,
-};
-
-const Search = () => {
-  const [query, setQuery] = useState('');
-  const [result, setResult] = useState(null);
-
-  const [form, setForm] = useState({
-    weight: '',
-    height: '',
-    age: '',
-    gender: 'male',
-    activity: 'sedentary',
-    goal: 'maintain',
-  });
-
-  const [dailyCalories, setDailyCalories] = useState(null);
-
-  const handleSearch = () => {
-    const food = query.toLowerCase();
-    const cal = mockFoodData[food];
-    setResult(cal ? `${cal} kcal per 100g` : 'Food not found in database.');
+const MealLog = () => {
+  const initialMeals = {
+    breakfast: [],
+    lunch: [],
+    dinner: [],
+    snacks: [],
   };
 
-  const handleInputChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const [meals, setMeals] = useState(initialMeals);
+  const [current, setCurrent] = useState({ name: '', calories: '', mealType: 'breakfast' });
+  const [waterIntake, setWaterIntake] = useState(0);
+
+  const addFoodItem = () => {
+    const { name, calories, mealType } = current;
+    if (!name || !calories || isNaN(calories)) return;
+
+    const newMealItems = [...meals[mealType], { name, calories: parseInt(calories) }];
+    setMeals({ ...meals, [mealType]: newMealItems });
+
+    setCurrent({ ...current, name: '', calories: '' });
   };
 
-  const calculateCalories = () => {
-    const { weight, height, age, gender, activity, goal } = form;
-    const w = parseFloat(weight);
-    const h = parseFloat(height);
-    const a = parseFloat(age);
+  const handleWaterAdd = (amount) => {
+    setWaterIntake((prev) => prev + amount);
+  };
 
-    let bmr =
-      gender === 'male'
-        ? 10 * w + 6.25 * h - 5 * a + 5
-        : 10 * w + 6.25 * h - 5 * a - 161;
-
-    const activityFactors = {
-      sedentary: 1.2,
-      light: 1.375,
-      moderate: 1.55,
-      active: 1.725,
-      very_active: 1.9,
-    };
-
-    let calories = bmr * activityFactors[activity];
-
-    if (goal === 'lose') calories -= 500;
-    if (goal === 'gain') calories += 300;
-
-    setDailyCalories(Math.round(calories));
+  const getTotalCalories = () => {
+    return Object.values(meals).flat().reduce((acc, item) => acc + item.calories, 0);
   };
 
   return (
     <div className="min-h-screen bg-white dark:bg-zinc-900 px-6 pt-28 pb-12 text-gray-900 dark:text-gray-100 transition-colors duration-300">
-      <div className="max-w-5xl mx-auto space-y-16">
-        {/* Food Search */}
+      <div className="max-w-4xl mx-auto space-y-12">
+        {/* Input section */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          className="p-6 rounded-xl bg-green-50 dark:bg-zinc-800 shadow-md space-y-4"
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl font-bold text-green-700 dark:text-green-400 mb-6">
-            🔍 Food Calorie Search
-          </h2>
-          <div className="flex flex-col sm:flex-row gap-4">
+          <h2 className="text-2xl font-bold text-green-700 dark:text-green-400">🍽 Add Meal Item</h2>
+          <div className="flex flex-col md:flex-row items-center gap-4">
             <input
               type="text"
-              placeholder="Search food (e.g. banana)"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="p-3 border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 rounded-xl w-full text-lg"
+              placeholder="Food name"
+              value={current.name}
+              onChange={(e) => setCurrent({ ...current, name: e.target.value })}
+              className="p-2 rounded-lg bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-600 w-full"
             />
-            <button
-              onClick={handleSearch}
-              className="bg-green-600 text-white px-6 py-2 rounded-xl hover:bg-green-700 transition text-lg"
+            <input
+              type="number"
+              placeholder="Calories"
+              value={current.calories}
+              onChange={(e) => setCurrent({ ...current, calories: e.target.value })}
+              className="p-2 rounded-lg bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-600 w-full"
+            />
+            <select
+              value={current.mealType}
+              onChange={(e) => setCurrent({ ...current, mealType: e.target.value })}
+              className="p-2 rounded-lg bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-600 w-full"
             >
-              Search
+              <option value="breakfast">Breakfast</option>
+              <option value="lunch">Lunch</option>
+              <option value="dinner">Dinner</option>
+              <option value="snacks">Snacks</option>
+            </select>
+            <button
+              onClick={addFoodItem}
+              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg w-full md:w-auto"
+            >
+              Add
             </button>
           </div>
-          {result && (
-            <p className="mt-4 text-xl dark:text-gray-300">
-              🍽️ <span className="font-semibold">Result:</span> {result}
-            </p>
-          )}
         </motion.div>
 
-        {/* Calorie Calculator */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-        >
-          <h2 className="text-4xl font-bold text-green-700 dark:text-green-400 mb-6">
-            ⚖️ Calorie Requirement Calculator
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {['weight', 'height', 'age'].map((field) => (
-              <input
-                key={field}
-                type="number"
-                name={field}
-                placeholder={`${field[0].toUpperCase() + field.slice(1)} ${
-                  field === 'weight' ? '(kg)' : field === 'height' ? '(cm)' : ''
-                }`}
-                value={form[field]}
-                onChange={handleInputChange}
-                className="p-3 border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 rounded-xl text-lg"
-              />
-            ))}
-
-            <select
-              name="gender"
-              value={form.gender}
-              onChange={handleInputChange}
-              className="p-3 border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 rounded-xl text-lg"
-            >
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-
-            <select
-              name="activity"
-              value={form.activity}
-              onChange={handleInputChange}
-              className="p-3 border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 rounded-xl text-lg"
-            >
-              <option value="sedentary">Sedentary (little or no exercise)</option>
-              <option value="light">Lightly active</option>
-              <option value="moderate">Moderately active</option>
-              <option value="active">Very active</option>
-              <option value="very_active">Extra active</option>
-            </select>
-
-            <select
-              name="goal"
-              value={form.goal}
-              onChange={handleInputChange}
-              className="p-3 border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 rounded-xl text-lg"
-            >
-              <option value="maintain">Maintain weight</option>
-              <option value="lose">Lose weight</option>
-              <option value="gain">Gain weight</option>
-            </select>
-          </div>
-
-          <button
-            onClick={calculateCalories}
-            className="mt-8 bg-green-600 text-white px-8 py-3 rounded-xl hover:bg-green-700 transition text-lg"
+        {/* Meal display */}
+        {Object.keys(meals).map((mealKey) => (
+          <motion.div
+            key={mealKey}
+            className="bg-white dark:bg-zinc-800 rounded-xl p-5 shadow-sm"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
           >
-            Calculate My Daily Calories
-          </button>
+            <h3 className="text-xl font-semibold capitalize mb-3 text-green-700 dark:text-green-300">
+              🍱 {mealKey}
+            </h3>
+            {meals[mealKey].length === 0 ? (
+              <p className="text-sm text-gray-500 dark:text-gray-400">No items added yet.</p>
+            ) : (
+              <ul className="space-y-2">
+                {meals[mealKey].map((item, idx) => (
+                  <li key={idx} className="flex justify-between text-sm border-b border-dashed pb-1">
+                    <span>{item.name}</span>
+                    <span className="text-green-600 dark:text-green-400">{item.calories} kcal</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </motion.div>
+        ))}
 
-          {dailyCalories && (
-            <motion.p
-              className="mt-6 text-2xl text-green-700 dark:text-green-300 font-semibold"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              🧮 You need approx. {dailyCalories} kcal/day to{' '}
-              <span className="underline">{form.goal}</span> your weight.
-            </motion.p>
-          )}
+        {/* Water intake section */}
+        <motion.div
+          className="bg-blue-50 dark:bg-zinc-800 rounded-xl p-5"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <h3 className="text-xl font-semibold text-blue-700 dark:text-blue-300 mb-3">💧 Water Intake</h3>
+          <div className="flex gap-4 flex-wrap mb-4">
+            {[250, 500, 750].map((amt) => (
+              <button
+                key={amt}
+                onClick={() => handleWaterAdd(amt)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+              >
+                +{amt}ml
+              </button>
+            ))}
+          </div>
+          <p className="text-lg text-blue-800 dark:text-blue-400 font-medium">
+            Total Water Consumed: {waterIntake} ml
+          </p>
+        </motion.div>
+
+        {/* Daily Summary */}
+        <motion.div
+          className="text-center text-xl font-bold text-green-800 dark:text-green-300 mt-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          🔥 Total Calories Consumed Today: {getTotalCalories()} kcal
         </motion.div>
       </div>
     </div>
   );
 };
 
-export default Search;
+export default MealLog;
