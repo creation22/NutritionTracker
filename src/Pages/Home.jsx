@@ -33,7 +33,7 @@ const Home = () => {
             className="bg-gradient-to-br from-green-500 to-green-700 hover:scale-105 hover:shadow-2xl transition-all duration-300 rounded-3xl p-6 flex flex-col items-center justify-center text-white"
           >
             <FaSearch size={36} className="mb-4 animate-pulse" />
-            <h3 className="text-2xl font-bold mb-2">Calorie Search</h3>
+            <h3 className="text-2xl font-bold mb-2">Calorie Count</h3>
             <p className="text-sm text-center opacity-80 mb-1">
               Instantly check calories in any food or meal.
             </p>
@@ -48,7 +48,7 @@ const Home = () => {
             className="bg-gradient-to-br from-purple-500 to-purple-700 hover:scale-105 hover:shadow-2xl transition-all duration-300 rounded-3xl p-6 flex flex-col items-center justify-center text-white"
           >
             <FaBarcode size={36} className="mb-4 animate-bounce" />
-            <h3 className="text-2xl font-bold mb-2">Food Scanner</h3>
+            <h3 className="text-2xl font-bold mb-2">Scanner & Search</h3>
             <p className="text-sm text-center opacity-80 mb-1">
               Scan barcodes or photos to reveal nutrition info.
             </p>

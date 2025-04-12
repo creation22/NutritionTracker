@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { SendHorizonal } from 'lucide-react';
 
 const mockReplies = {
   protein: 'Protein helps in muscle building and repair. Great for post-workout meals!',
@@ -38,22 +39,22 @@ const Chatbot = () => {
   };
 
   return (
-    <div className="min-h-screen pt-32 px-4 md:px-8 bg-gradient-to-br from-green-50 to-white dark:from-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-100 transition-all duration-300">
-      <h2 className="text-4xl font-bold text-center text-green-600 dark:text-green-400 mb-6">
-        AI Nutrition Assistant 🤖
+    <div className="min-h-screen pt-32 px-4 md:px-8 bg-gradient-to-br from-green-100 to-white dark:from-gray-900 dark:to-gray-800 transition-all duration-300">
+      <h2 className="text-5xl font-bold text-center text-green-600 dark:text-green-400 mb-8 tracking-tight">
+        NutriChat AI 🤖
       </h2>
 
-      <div className="max-w-3xl mx-auto w-full bg-white dark:bg-gray-900 shadow-2xl rounded-3xl p-6 flex flex-col h-[500px] overflow-y-auto space-y-2">
+      <div className="max-w-3xl mx-auto w-full backdrop-blur-md bg-white/30 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 shadow-xl rounded-3xl p-6 flex flex-col h-[500px] overflow-y-auto space-y-3 scrollbar-thin scrollbar-thumb-green-400 scrollbar-track-transparent">
         {messages.map((msg, index) => (
           <motion.div
             key={index}
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className={`max-w-[80%] px-4 py-3 rounded-xl shadow-md ${
+            className={`max-w-[75%] px-5 py-3 rounded-2xl text-sm md:text-base shadow-md ${
               msg.sender === 'user'
-                ? 'bg-green-100 dark:bg-green-700 ml-auto text-right'
-                : 'bg-gray-200 dark:bg-gray-700 mr-auto text-left'
+                ? 'bg-green-500 text-white ml-auto text-right'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 mr-auto text-left'
             }`}
           >
             {msg.text}
@@ -66,13 +67,14 @@ const Chatbot = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-          placeholder="Ask a nutrition question..."
-          className="flex-1 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-l-xl px-4 py-3 focus:outline-none"
+          placeholder="Ask about nutrition, calories, protein..."
+          className="flex-1 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-l-xl px-5 py-3 focus:outline-none placeholder-gray-500 dark:placeholder-gray-400"
         />
         <button
           onClick={handleSend}
-          className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-r-xl transition"
+          className="bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-r-xl flex items-center gap-2 transition"
         >
+          <SendHorizonal size={18} />
           Send
         </button>
       </div>

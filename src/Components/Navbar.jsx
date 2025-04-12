@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 
@@ -7,6 +7,12 @@ const Navbar = () => {
   const navigate = useNavigate();
   const currentPath = location.pathname;
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setMenuOpen(false);
+  }, [location]);
 
   const isActive = (path) =>
     currentPath === path
@@ -24,26 +30,16 @@ const Navbar = () => {
         to="/home"
         className="text-2xl md:text-3xl font-extrabold text-green-400 hover:scale-105 transform transition duration-300"
       >
-        🍽️ NutriAI
+        🥗 NutriAI
       </Link>
 
       {/* Desktop menu */}
       <div className="hidden md:flex items-center gap-6 text-base md:text-lg font-medium">
-        <Link to="/home" className={isActive('/home')}>
-          Home
-        </Link>
-        <Link to="/search" className={isActive('/search')}>
-          Calorie Count
-        </Link>
-        <Link to="/scanner" className={isActive('/scanner')}>
-          Scanner & Search
-        </Link>
-        <Link to="/chatbot" className={isActive('/chatbot')}>
-          AI Assistant
-        </Link>
-        <Link to="/profile" className={isActive('/profile')}>
-          Profile
-        </Link>
+        <Link to="/home" className={isActive('/home')}>Home</Link>
+        <Link to="/scanner" className={isActive('/scanner')}>Scanner & Search</Link>
+        <Link to="/search" className={isActive('/search')}>Calorie Count</Link>
+        <Link to="/chatbot" className={isActive('/chatbot')}>AI Assistant</Link>
+        <Link to="/profile" className={isActive('/profile')}>Profile</Link>
         <button
           onClick={handleLogout}
           className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl text-sm shadow-md transition"
@@ -62,21 +58,11 @@ const Navbar = () => {
       {/* Mobile dropdown menu */}
       {menuOpen && (
         <div className="absolute top-20 right-4 bg-zinc-800 rounded-xl shadow-lg text-white w-56 p-5 flex flex-col space-y-4 text-sm z-50">
-          <Link to="/home" className={isActive('/home')} onClick={() => setMenuOpen(false)}>
-            Home
-          </Link>
-          <Link to="/search" className={isActive('/search')} onClick={() => setMenuOpen(false)}>
-            Calorie Count
-          </Link>
-          <Link to="/scanner" className={isActive('/scanner')} onClick={() => setMenuOpen(false)}>
-            Scanner & Search
-          </Link>
-          <Link to="/chatbot" className={isActive('/chatbot')} onClick={() => setMenuOpen(false)}>
-            AI Assistant
-          </Link>
-          <Link to="/profile" className={isActive('/profile')} onClick={() => setMenuOpen(false)}>
-            Profile
-          </Link>
+          <Link to="/home" className={isActive('/home')}>Home</Link>
+          <Link to="/scanner" className={isActive('/scanner')}>Scanner & Search</Link>
+          <Link to="/search" className={isActive('/search')}>Calorie Count</Link>
+          <Link to="/chatbot" className={isActive('/chatbot')}>AI Assistant</Link>
+          <Link to="/profile" className={isActive('/profile')}>Profile</Link>
           <button
             onClick={() => {
               handleLogout();
