@@ -1,14 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import Navbar from './Components/Navbar';
-import Footer from './Components/Footer';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
-import Login from './Pages/Login';
-import Home from './Pages/Home';
-import Search from './Pages/Search';
-import Scanner from './Pages/Scanner';
-import Chatbot from './Pages/Chatbot';
-import Profile from './Pages/Profile';
+import Login from './pages/Login';
+import Home from './pages/Home';
+import Search from './pages/Search';
+import Scanner from './pages/Scanner';
+import Chatbot from './pages/Chatbot';
+import Profile from './pages/Profile';
 
 const AppWrapper = () => {
   const location = useLocation();
